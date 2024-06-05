@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Página de contactos</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>Spring Boot Web Application</h1>
+<div id="content">Contactos</div>
+<a href="http://localhost:8080/addContacto">Agregar contacto</a>
+</body>
+<script>
+    function loadContactos() {
+        axios.get('http://localhost:8080/api/v1/contacto/')
+            .then(function (response) {
+                var contactos = response.data;
+                var content = document.getElementById('content');
+                var html = '<h2>Contactos</h2>';
+                html += '<table border="1">';
+                html += '<tr>';
+                html += '<th>Id</th>';
+                html += '<th>Nombre</th>';
+                html += '<th>Telefono</th>';
+                html += '<th>Email</th>';
+                html += '<th>Direccion</th>';
+                html += '<th>Eliminar</th>';
+                html += '<th>Editar</th>';
+                html += '</tr>';
+                for (var i = 0; i < contactos.length; i++) {
+                    var contacto = contactos[i];
+                    html += '<tr>';
+                    html += '<td>' + contacto.id + '</td>';
+                    html += '<td>' + contacto.nombre + '</td>';
+                    html += '<td>' + contacto.telefono + '</td>';
+                    html += '<td>' + contacto.email + '</td>';
+                    html += '<td>' + contacto.direccion + '</td>';
+                    html += '<td>' + '<button onclick="eliminarContacto(' + contacto.id + ')">Eliminar</button>' + '</td>';
+                    html += '<td>' + '<button onclick="editarContacto(' + contacto.id + ')">Editar</button>' + '</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                content.innerHTML = html;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    function eliminarContacto(id) {
+        axios.delete('http://localhost:8080/api/v1/contacto/' + id)
+            .then(function (response) {
+                loadContactos();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadContactos();
+    });
+</script>
+
+</html>

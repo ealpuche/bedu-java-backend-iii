@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Web Application</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Spring Boot Web Application</h1>
+    <div id="content">Usuarios Application</div>
+</body>
+    <script>
+        function loadUsuarios() {
+            axios.get('http://localhost:8080/usuarios')
+                .then(function (response) {
+                    var usuarios = response.data;
+                    var content = document.getElementById('content');
+                    var html = '<h2>Usuarios</h2>';
+                    html += '<table border="1">';
+                    html += '<tr>';
+                    html += '<th>Nombre</th>';
+                    html += '<th>Apellido</th>';
+                    html += '<th>Email</th>';
+                    html += '<th>Direccion</th>';
+                    html += '</tr>';
+                    for (var i = 0; i < usuarios.length; i++) {
+                        var usuario = usuarios[i];
+                        html += '<tr>';
+                        html += '<td>' + usuario.nombre + '</td>';
+                        html += '<td>' + usuario.apellido + '</td>';
+                        html += '<td>' + usuario.email + '</td>';
+                        html += '<td>' + usuario.direccion + '</td>';
+                        html += '</tr>';
+                    }
+                    html += '</table>';
+                    content.innerHTML = html;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadUsuarios();
+        });
+    </script>
+
+</html>
